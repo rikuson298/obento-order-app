@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   root 'top#index'
 
   namespace :api do
-    resources :foo, only: %i"index"
+    resources :orders, only: %i"index create update destroy"
   end
 
   # get '*path', to: redirect('/')
