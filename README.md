@@ -1,9 +1,13 @@
-# README
+# obento-order-app
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Project setup
+```
+bundle install
+yarn install
+```
 
-Things you may want to cover:
+
+## Project Info
 
 * Ruby version
 
