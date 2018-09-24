@@ -61,7 +61,9 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
+
+$list-item-height:   30px;
 
 html {
   height: 100%;
@@ -81,7 +83,7 @@ body {
 
 #new-task-form {
   width: 100%;
-  height: 30px;
+  height: $list-item-height;
 }
 
 #task-list {
@@ -96,8 +98,13 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 30px;
+  height: $list-item-height;
   border-bottom: dashed 1px gray;
+
+  p {
+    margin: 0;
+    padding-left: 10px;
+  }
 }
 
 .delete-button {
