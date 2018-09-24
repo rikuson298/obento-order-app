@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  match '*path' => 'options_request#preflight', via: :options
   root 'top#index'
 
   namespace :api do
