@@ -4,9 +4,8 @@
       li.order(v-for="order in orders" :key=index)
         p {{ order.name }}
         button.delete-button(v-on:click="deleteOrder(order.id)") ×
-    .order-btn(v-on:click="deleteOrder(order.id)")
-      p.order-btn-text 注文を
-      p.order-btn-text 入力する
+    router-link.order-btn(to="/new")
+      p.order-btn-text 注文する
 </template>
 
 <script>
@@ -24,38 +23,24 @@ export default {
     }
   },
   methods: {
-    getOrders: () => {
+    getOrders: function() {
       axios.get(`http://${hostName}${path}`)
         .then((response) => {
           this.orders = response.data;
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
         });
     },
-    postOrder: () => {
-      axios.post(`http://${hostName}${path}`,
-          `order[text]=${this.newOrder}`
-        )
-        .then((response) => {
-          this.getOrders();
-          this.newOrder = '';
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    deleteOrder: (id) => {
+    deleteOrder: function(id) {
       axios.delete(`http://${hostName}${path}/${id}`)
-        .then((response) => {
+        .then(() => {
           this.getOrders();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
         });
     },
   },
-  mounted: () => {
+  mounted: function() {
     this.getOrders();
   }
 }

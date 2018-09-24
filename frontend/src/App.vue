@@ -2,19 +2,17 @@
   div(id="app")
     Header
     .conteinar
-      OrderList
+      router-view
     Footer
 </template>
 
 <script>
-import OrderList from './components/OrderList.vue'
 import Header from './components/Header.vue'
 import Footer from './components/Footer.vue'
 
 export default {
   name: 'app',
   components: {
-    OrderList,
     Header,
     Footer,
   }
@@ -35,7 +33,7 @@ export default {
 }
 @media screen and (min-width: 768px) {
   .conteinar {
-    width: 1170px;
+    max-width: 1170px;
     min-height: 700px;
     margin: 70px auto 20px auto;
   }
