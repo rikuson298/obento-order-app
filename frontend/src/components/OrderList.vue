@@ -1,62 +1,62 @@
-<template>
-  <div id="app-task">
-    <form v-on:submit.prevent="postTask">
-      <input id="new-task-form" type="text" v-model="newTask" placeholder="やりたいことは...">
-    </form>
-    <ul id="task-list">
-      <li class="task" v-for="task in tasks" :key=task.text><p>{{ task.text }}</p><button class="delete-button" v-on:click="deleteTask(task.id)">×</button></li>
-    </ul>
-  </div>
+<template lang="pug">
+  div(id="order-list")
+    ul.order-list
+      li.order(v-for="order in orders" :key=index)
+        p {{ order.name }}
+        button.delete-button(v-on:click="deleteOrder(order.id)") ×
+    .order-btn(v-on:click="deleteOrder(order.id)")
+      p.order-btn-text 注文を
+      p.order-btn-text 入力する
 </template>
 
 <script>
 import axios from 'axios';
 
 const hostName = 'localhost:3000';
-const path = '/api/order'
+const path = '/api/orders';
 
 export default {
-  name: 'app-task',
+  name: 'order-list',
   data () {
     return {
-      tasks: [],
-      newTask: '',
+      orders: [],
+      newOrder: '',
     }
   },
   methods: {
-    getTasks: function() {
-      axios.get(`http://${hostName}${path}s`)
+    getOrders: () => {
+      axios.get(`http://${hostName}${path}`)
         .then((response) => {
-          this.tasks = response.data;
+          this.orders = response.data;
         })
-        .catch(function(error) {
+        .catch((error) => {
           console.log(error);
         });
     },
-    postTask: function() {
+    postOrder: () => {
       axios.post(`http://${hostName}${path}`,
-          `task[text]=${this.newTask}`
+          `order[text]=${this.newOrder}`
         )
         .then((response) => {
-          this.getTasks();
-          this.newTask = '';
+          this.getOrders();
+          this.newOrder = '';
         })
-        .catch(function(error) {
+        .catch((error) => {
           console.log(error);
         });
     },
-    deleteTask: function(id) {
+    deleteOrder: (id) => {
       axios.delete(`http://${hostName}${path}/${id}`)
         .then((response) => {
-          this.getTasks();
+          this.getOrders();
         })
-        .catch(function(error) {
+        .catch((error) => {
           console.log(error);
         });
     },
   },
-  mounted: function() {
-    this.getTasks();
+  mounted: () => {
+    this.getOrders();
   }
 }
 </script>
@@ -64,57 +64,48 @@ export default {
 <style lang="scss">
 
 $list-item-height:   30px;
-
-html {
-  height: 100%;
-}
-
-body {
-  height: 100%;
-  margin: 0;
-}
-
-#app-task {
+#order-list {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
 
-#new-task-form {
-  width: 100%;
-  height: $list-item-height;
-}
-
-#task-list {
+.order-list {
   width: 100%;
   list-style-type: none;
   margin: 0;
   padding: 0;
-}
-
-.task {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: $list-item-height;
-  border-bottom: dashed 1px gray;
-
-  p {
-    margin: 0;
-    padding-left: 10px;
+  .order {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: $list-item-height;
+    border-bottom: dashed 1px gray;
+    p {
+      margin: 0;
+      padding-left: 10px;
+    }
   }
 }
-
-.delete-button {
-  width: 20px;
-  height: 20px;
-  margin: 0 8px;
-  background-color: gray;
+.order-btn {
+  margin: 20px auto;
+  padding: 5px;
+  background-color: orange;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   color: white;
-  border: none;
+  font-weight: bold;
+  font-size: 18px;
   border-radius: 50%;
+  width: 100px;
+  height: 100px;
 }
-
+.order-btn-text {
+  margin: 5px 0;
+  letter-spacing: 1px;
+}
 </style>
