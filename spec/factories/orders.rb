@@ -1,8 +1,7 @@
 FactoryBot.define do
   factory :order do
-    user_id { nil }
-    name { "foo" }
-    date { Time.zone.now }
+    date { Time.zone.today }
+    day_of_week { 1 }
     status { 0 }
   end
 end

@@ -39,5 +39,7 @@ module ObentoOrderApp
       request_spec: false, 
       routing_specs: false
     end
+
+    config.time_zone = 'Tokyo'
   end
 end

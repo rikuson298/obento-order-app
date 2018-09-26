@@ -2,7 +2,7 @@
   div(id="order-list")
     ul.order-list
       li.order(v-for="order in orders" :key=index)
-        p {{ order.name }}
+        p {{ order.date }}
         button.delete-button(v-on:click="deleteOrder(order.id)") ×
     router-link.order-btn(to="/new")
       p.order-btn-text 注文する

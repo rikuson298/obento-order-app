@@ -4,7 +4,8 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :orders, only: %i"index create update destroy"
-  end
+    resources :order_users_relations, only: %i"index create update destroy"
+end
 
   # get '*path', to: redirect('/')
 end

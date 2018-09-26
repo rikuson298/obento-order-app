@@ -1,10 +1,21 @@
 class Order < ApplicationRecord
-  validates :name, :date, :status, presence: true
-  validate :check_unique
+  has_many :order_users_relations
 
-  def check_unique
-    if Order.where.not(id: id).where(name: name, date: date.beginning_of_day..date.end_of_day).exists?
-      error.add(:name, '同じ日に同じ名前では登録できません')
-    end
+  validates :date, :day_of_week, :status, presence: true
+  validates :date, uniqueness: true
+
+  enum day_of_week: {
+    sunday: 0,
+    monday: 1,
+    tuesday: 2,
+    wednesday: 3,
+    thursday: 4,
+    friday: 5,
+    saturday: 6,
+  }
+  enum status: { acceptable: 0, ordered: 1, not_ordered: 2 }
+
+  def day_of_week_ja
+    %w(日 月 火 水 木 金 土)[day_of_week]
   end
 end

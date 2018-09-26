@@ -3,15 +3,16 @@ require 'rails_helper'
 RSpec.describe Api::OrdersController, type: :controller do
   let(:valid_attributes) {
     {
-      name: 'foo',
-      date: Time.zone.now,
+      date: Time.zone.today,
+      day_of_week: 1,
+      status: :acceptable,
     }
   }
-
   let(:invalid_attributes) {
     {
-      name: nil,
-      date: Time.zone.now,
+      date: nil,
+      day_of_week: 3,
+      status: :acceptable,
     }
   }
 
@@ -54,14 +55,14 @@ RSpec.describe Api::OrdersController, type: :controller do
     context "with valid params" do
       let(:new_attributes) {
         {
-          status: 1,
+          status: :ordered,
         }
       }
 
       it "updates the requested order" do
         put :update, params: {id: order.to_param, order: new_attributes}
         order.reload
-        expect(order.status).to eq(1)
+        expect(order.status).to eq("ordered")
       end
 
       it "renders a JSON response with the order" do

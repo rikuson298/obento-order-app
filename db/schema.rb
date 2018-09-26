@@ -10,16 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_23_092014) do
+ActiveRecord::Schema.define(version: 2018_09_26_140808) do
 
-  create_table "orders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "order_users_relations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "order_id", null: false
     t.bigint "user_id"
-    t.string "name", null: false
-    t.timestamp "date", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.string "user_name", null: false
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name", "date"], name: "index_orders_on_name_and_date", unique: true
+    t.index ["order_id", "user_id"], name: "index_order_users_relations_on_order_id_and_user_id", unique: true
+    t.index ["order_id", "user_name"], name: "index_order_users_relations_on_order_id_and_user_name", unique: true
+  end
+
+  create_table "orders", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.date "date", null: false
+    t.integer "day_of_week", default: 0, null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_orders_on_date", unique: true
   end
 
 end

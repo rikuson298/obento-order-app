@@ -1,7 +1,10 @@
 class Api::OrdersController < Api::ApplicationController
   before_action :set_order, only: %i"update destroy"
   def index
-    @orders = Order.all
+    @orders = (-1..13).map do |i|
+      target_day = Time.zone.today + i
+      Order.find_or_create_by(date: target_day, day_of_week: target_day.wday)
+    end
 
     render json: @orders, status: :ok
   end
