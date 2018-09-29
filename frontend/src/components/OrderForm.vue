@@ -1,7 +1,19 @@
 <template lang="pug">
   div.order-form(id="order-form")
-    p Obent Order App
-    router-link.order-btn(to="/new")
+    .form-title
+      p 注文する
+    .form-label
+      p お名前
+    .form-control
+      input.form-input(id="order-user-name" type="text" v-model="userName" placeholder="入力してください")
+    .form-label
+      p 注文日
+    ul.form-order-list
+      li.form-order-list-item(v-for="(order, index) in orders" :key="index")
+        input(type="checkbox" v-bind:id="order.id" v-model="order.checked")
+        label.checkbox(v-bind:for="order.id") {{ `${order.date}(${order.day_of_week_ja})` }}
+
+    .order-btn(v-on:click="craeatOrders")
       p.order-btn-text 注文を
       p.order-btn-text 登録する
     router-link.back-btn(to="/")
@@ -12,28 +24,48 @@
 import axios from 'axios';
 
 const hostName = 'localhost:3000';
-const path = '/api/orders';
 
 export default {
   name: 'order-form',
+  data () {
+    return {
+      orders: [{id: 0, checked: false}],
+      userName: '',
+    }
+  },
   methods: {
-    Order: function() {
-      axios.post(`http://${hostName}${path}`,
-          `order[text]=${this.newOrder}`
-        )
-        .then(() => {
-          this.getOrders();
-          this.newOrder = '';
+    getOrders: function() {
+      axios.get(`http://${hostName}/api/orders`)
+        .then((response) => {
+          this.orders = response.data
         })
         .catch(() => {
         });
     },
+    craeatOrders: function() {
+      const orderIds = this.orders.filter(o => o.checked).map(o => o.id)
+      axios.post(`http://${hostName}/api/order_users_relations/bulk_create`,{
+        order_users_relation: {
+          user_name: this.userName,
+          order_ids: orderIds
+        },
+      }).then(() => {
+        this.$router.push('/')
+      }).catch(() => {
+      })
+    },
   },
+  mounted: function() {
+    this.getOrders();
+  }
 }
 </script>
 
 <style lang="scss">
 .order-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 15px;
   .order-btn {
     margin: 20px auto;
     padding: 5px;
@@ -66,6 +98,34 @@ export default {
   .back-btn-text {
     margin: 5px 0;
     letter-spacing: 1px;
+  }
+  .form-title {
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 5px;
+    border-bottom: 1px solid gray;
+    margin: 20px 0;
+  }
+  .form-label {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 5px;
+    border-left: 4px solid gray;
+    margin: 15px 0;
+  }
+  .form-input {
+    width: 100%;
+    height: 30px;
+    font-size: 13px;
+  }
+  .form-order-list {
+    padding: 10px 50px;
+  }
+  .form-order-list-item {
+    display: flex;
+    justify-content: space-around;
+    margin: 15px;
+    font-weight: bold;
   }
 }
 </style>

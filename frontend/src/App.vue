@@ -19,7 +19,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -36,6 +36,82 @@ export default {
     max-width: 1170px;
     min-height: 700px;
     margin: 70px auto 20px auto;
+  }
+}
+$iconColor: orange;
+input[type=radio], input[type=checkbox] {
+  display: none;
+}
+.radio, .checkbox {
+  box-sizing: border-box;
+  -webkit-transition: background-color 0.2s linear;
+  transition: background-color 0.2s linear;
+  position: relative;
+  display: inline-block;
+  padding: 12px 12px 12px 46px;
+  border-radius: 8px;
+  vertical-align: middle;
+  cursor: pointer;
+  &:hover {
+    background-color: #fff6e6;
+    &:after {
+      border-color: $iconColor;
+    }
+  }
+  &:after {
+    -webkit-transition: border-color 0.2s linear;
+    transition: border-color 0.2s linear;
+    position: absolute;
+    top: 23%;
+    left: 15px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #bbb;
+    border-radius: 4px;
+    content: '';
+  }
+}
+.radio {
+  &:before {
+    -webkit-transition: opacity 0.2s linear;
+    transition: opacity 0.2s linear;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    display: block;
+    margin-top: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: $iconColor;
+    content: '';
+    opacity: 0;
+    input[type=radio]:checked + & {
+      opacity: 1;
+    }
+  }
+}
+.checkbox {
+  &:before {
+    -webkit-transition: opacity 0.2s linear;
+    transition: opacity 0.2s linear;
+    position: absolute;
+    top: 29%;
+    left: 22px;
+    display: block;
+    width: 7px;
+    height: 12px;
+    border-right: 3px solid $iconColor;
+    border-bottom: 3px solid $iconColor;
+    content: '';
+    opacity: 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    input[type=checkbox]:checked + & {
+      opacity: 1;
+    }
   }
 }
 /* reset CSS */
