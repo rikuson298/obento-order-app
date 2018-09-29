@@ -1,7 +1,7 @@
 class Api::OrdersController < Api::ApplicationController
   before_action :set_order, only: %i"update destroy"
   def index
-    @orders = (-1..8).map do |i|
+    @orders = (0..14).map do |i|
       target_day = Time.zone.today + i
       next if target_day.saturday? || target_day.sunday?
       order = Order.find_or_create_by(date: target_day, day_of_week: target_day.wday)

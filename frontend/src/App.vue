@@ -25,6 +25,25 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: dimgray;
 }
+.page-title {
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 5px;
+  border-bottom: 1px solid gray;
+  margin: 20px 0;
+}
+.form-label {
+  font-size: 13px;
+  font-weight: bold;
+  padding: 5px;
+  border-left: 4px solid gray;
+  margin: 15px 0;
+}
+.form-input {
+  width: 100%;
+  height: 30px;
+  font-size: 13px;
+}
 .conteinar {
   margin-top: 50px;
   width: 100%;

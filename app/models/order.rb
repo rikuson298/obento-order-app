@@ -32,7 +32,11 @@ class Order < ApplicationRecord
   end
 
   def to_json
-    as_json(only: %i"id day_of_week status", methods: %i"day_of_week_ja").merge({
+    as_json({
+      only: %i"id day_of_week status",
+      methods: %i"day_of_week_ja",
+      include: :order_users_relations
+    }).merge({
       date: date.strftime("%-m/%-d"),
     })
   end

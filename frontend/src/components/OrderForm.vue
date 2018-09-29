@@ -1,6 +1,6 @@
 <template lang="pug">
   div.order-form(id="order-form")
-    .form-title
+    .page-title
       p 注文する
     .form-label
       p お名前
@@ -80,6 +80,11 @@ export default {
     border-radius: 50%;
     width: 100px;
     height: 100px;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.7;
+    }
+
   }
   .back-btn {
     margin: 20px auto;
@@ -98,25 +103,6 @@ export default {
   .back-btn-text {
     margin: 5px 0;
     letter-spacing: 1px;
-  }
-  .form-title {
-    font-size: 18px;
-    font-weight: bold;
-    padding-bottom: 5px;
-    border-bottom: 1px solid gray;
-    margin: 20px 0;
-  }
-  .form-label {
-    font-size: 13px;
-    font-weight: bold;
-    padding: 5px;
-    border-left: 4px solid gray;
-    margin: 15px 0;
-  }
-  .form-input {
-    width: 100%;
-    height: 30px;
-    font-size: 13px;
   }
   .form-order-list {
     padding: 10px 50px;

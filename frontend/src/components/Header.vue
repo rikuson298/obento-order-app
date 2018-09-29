@@ -22,6 +22,7 @@ export default {
   font-weight: bold;
   display: flex;
   align-items: center;
+  z-index: 1000;
 }
 .header {
   .header-text {
