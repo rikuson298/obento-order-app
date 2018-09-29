@@ -19,7 +19,6 @@ ActiveRecord::Schema.define(version: 2018_09_26_140808) do
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["order_id", "user_id"], name: "index_order_users_relations_on_order_id_and_user_id", unique: true
     t.index ["order_id", "user_name"], name: "index_order_users_relations_on_order_id_and_user_name", unique: true
   end
 

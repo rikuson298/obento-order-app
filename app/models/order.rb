@@ -16,6 +16,12 @@ class Order < ApplicationRecord
   enum status: { acceptable: 0, ordered: 1, not_ordered: 2 }
 
   def day_of_week_ja
-    %w(日 月 火 水 木 金 土)[day_of_week]
+    %w(日 月 火 水 木 金 土)[day_of_week_before_type_cast]
+  end
+
+  def to_json
+    as_json(only: %i"id day_of_week status", methods: %i"day_of_week_ja").merge({
+      date: date.strftime("%-m/%-d"),
+    })
   end
 end

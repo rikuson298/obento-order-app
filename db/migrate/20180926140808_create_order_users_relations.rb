@@ -8,7 +8,6 @@ class CreateOrderUsersRelations < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
-    add_index :order_users_relations, %i"order_id user_id", unique: true
     add_index :order_users_relations, %i"order_id user_name", unique: true
   end
 end

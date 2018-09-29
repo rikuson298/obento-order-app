@@ -15,6 +15,28 @@ class Api::OrderUsersRelationsController < Api::ApplicationController
     end
   end
 
+  def bulk_create
+    if order_users_relation_params[:order_ids].blank?
+      render({
+        json: {
+          message: '注文日を選択してください'
+        },
+        status: :unprocessable_entity
+      })
+    end
+    created_ids = OrderUsersRelation.bulk_create(order_users_relation_params[:order_ids], order_users_relation_params[:user_name])
+    if created_ids.present?
+      render json: {order_ids: created_ids}, status: :created
+    else
+      render({
+        json: {
+          message: '予期せぬエラーが発生しました'
+        },
+        status: :unprocessable_entity
+      })
+    end
+  end
+
   def update
     if @order_users_relation.update(order_users_relation_params)
       render json: @order_users_relation
@@ -33,6 +55,12 @@ class Api::OrderUsersRelationsController < Api::ApplicationController
     end
 
     def order_users_relation_params
-      params.require(:order_users_relation).permit(:order_id, :user_id, :user_name, :status)
+      params.require(:order_users_relation)
+        .permit(
+          :order_id,
+          :user_id,
+          :user_name,
+          :status,
+          order_ids: [])
     end
 end
