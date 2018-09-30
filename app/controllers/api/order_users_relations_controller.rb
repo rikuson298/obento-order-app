@@ -6,6 +6,16 @@ class Api::OrderUsersRelationsController < Api::ApplicationController
     render json: @order_users_relations
   end
 
+  def new
+    @orders = (0..13).map do |i|
+      target_day = Time.zone.today + i
+      next if target_day.saturday? || target_day.sunday?
+      order = Order.acceptable.find_by(date: target_day, day_of_week: target_day.wday)
+      order.to_json if order.present?
+    end
+    render json: @orders.compact, status: :ok
+  end
+
   def create
     @order_users_relation = OrderUsersRelation.new(order_users_relation_params)
     if @order_users_relation.save
@@ -17,12 +27,12 @@ class Api::OrderUsersRelationsController < Api::ApplicationController
 
   def bulk_create
     if order_users_relation_params[:order_ids].blank?
-      render({
+      render(
         json: {
           message: '注文日を選択してください'
         },
         status: :unprocessable_entity
-      })
+      )
     end
     created_ids = OrderUsersRelation.bulk_create(order_users_relation_params[:order_ids], order_users_relation_params[:user_name])
     if created_ids.present?

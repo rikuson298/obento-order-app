@@ -3,7 +3,7 @@
     .page-title
       p 注文する
     .form-label
-      p お名前
+      p お名前(絵文字は使えません)
     .form-control
       input.form-input(id="order-user-name" type="text" v-model="userName" placeholder="入力してください")
     .form-label
@@ -13,6 +13,9 @@
         input(type="checkbox" v-bind:id="order.id" v-model="order.checked")
         label.checkbox(v-bind:for="order.id") {{ `${order.date}(${order.day_of_week_ja})` }}
 
+    .errors(v-if="errors.length > 0")
+      .error-msg(v-for="error in errors")
+        p {{ error }}
     .order-btn(v-on:click="craeatOrders")
       p.order-btn-text 注文を
       p.order-btn-text 登録する
@@ -30,12 +33,13 @@ export default {
   data () {
     return {
       orders: [{id: 0, checked: false}],
+      errors: [],
       userName: '',
     }
   },
   methods: {
     getOrders: function() {
-      axios.get(`http://${hostName}/api/orders`)
+      axios.get(`http://${hostName}/api/order_users_relations/new`)
         .then((response) => {
           this.orders = response.data
         })
@@ -44,15 +48,31 @@ export default {
     },
     craeatOrders: function() {
       const orderIds = this.orders.filter(o => o.checked).map(o => o.id)
+      if (!this.validetionForm(orderIds)) return
       axios.post(`http://${hostName}/api/order_users_relations/bulk_create`,{
         order_users_relation: {
           user_name: this.userName,
           order_ids: orderIds
         },
       }).then(() => {
+        this.errors = []
         this.$router.push('/')
       }).catch(() => {
       })
+    },
+    validetionForm: function(orderIds) {
+      let errors = []
+      if (!this.userName) {
+        errors.push('お名前を入力してください')
+      }
+      if (orderIds && orderIds.length < 1) {
+        errors.push('注文日を1つ以上選択してください')
+      }
+      if (errors.length > 0) {
+        this.errors = errors
+        return false
+      }
+      return true
     },
   },
   mounted: function() {
@@ -112,6 +132,11 @@ export default {
     justify-content: space-around;
     margin: 15px;
     font-weight: bold;
+  }
+  .errors {
+    margin: 10px auto;
+    color: red;
+    text-align: center;
   }
 }
 </style>

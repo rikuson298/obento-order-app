@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     resources :orders, only: %i"index create update destroy"
-    resources :order_users_relations, only: %i"index create update destroy" do
+    resources :order_users_relations, only: %i"index new create update destroy" do
       collection do
         post :bulk_create
       end
