@@ -25,14 +25,24 @@
             p -
           li.order-item-cell
             p {{ `${order.order_users_relations.length}/10` }}
-          li.order-item-cell.is-user(v-for="user in order.order_users_relations" :key=index)
+          li.order-item-cell.is-user(
+            v-for="user in order.order_users_relations"
+            v-on:click="onClickUser(user, `${order.date}(${order.day_of_week_ja})`)"
+            :key=index)
             p {{ user.user_name }}
     router-link.order-btn(to="/new")
       p.order-btn-text 注文する
+    
+    Toast(
+      :isShown="isToastShown === true"
+      :onCloseHandler="toastClose",
+      :onConformHandler="onConformHandler"
+      :text="toastText")
 </template>
 
 <script>
 import axios from 'axios';
+import Toast from './Toast.vue'
 
 const hostName = 'localhost:3000';
 const path = '/api/orders';
@@ -42,7 +52,13 @@ export default {
   data () {
     return {
       orders: [],
+      isToastShown: false,
+      onConformHandler: () => {} ,
+      toastText: '' ,
     }
+  },
+  components: {
+    Toast,
   },
   methods: {
     getOrders: function() {
@@ -53,13 +69,21 @@ export default {
         .catch(() => {
         });
     },
-    deleteOrder: function(id) {
-      axios.delete(`http://${hostName}${path}/${id}`)
+    deleteUsersOrder: function(id) {
+      axios.delete(`http://${hostName}/api/order_users_relations/${id}`)
         .then(() => {
           this.getOrders();
         })
         .catch(() => {
         });
+    },
+    onClickUser: function(user, date) {
+      this.onConformHandler = () => this.deleteUsersOrder(user.id)
+      this.toastText = `${user.user_name}さんの${date}の注文を取り消してもよろしいですか？`
+      this.isToastShown = true
+    },
+    toastClose: function() {
+      this.isToastShown = false
     },
   },
   mounted: function() {
@@ -72,6 +96,7 @@ export default {
 
 $list-item-height:   30px;
 #order-list {
+  padding-bottom: 15px;
   .title-area {
     padding: 15px
   }
@@ -118,6 +143,10 @@ $list-item-height:   30px;
       }
       &.is-user{
         border-bottom: 0;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.7;
+        }
       }
     }
   }
