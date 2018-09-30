@@ -27,8 +27,14 @@ class Order < ApplicationRecord
   }
   enum status: { acceptable: 0, ordered: 1, not_ordered: 2 }
 
+  APP_BORDER = 10
+
   def day_of_week_ja
     %w(日 月 火 水 木 金 土)[day_of_week_before_type_cast]
+  end
+
+  def cant_ordered!
+    update(status: :not_ordered)
   end
 
   def to_json
@@ -38,6 +44,7 @@ class Order < ApplicationRecord
       include: :order_users_relations
     }).merge({
       date: date.strftime("%-m/%-d"),
+      app_border: APP_BORDER,
     })
   end
 end

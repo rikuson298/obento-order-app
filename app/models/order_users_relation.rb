@@ -17,6 +17,8 @@ class OrderUsersRelation < ApplicationRecord
   validates :order_id, :user_name, :status, presence: true
   validates :order_id, uniqueness: {scope: %i"user_name"}
 
+  enum status: { not_receive: 0, received: 1 }
+
   class << self
     def bulk_create(order_ids, user_name)
       created_ids = []

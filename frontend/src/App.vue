@@ -68,7 +68,7 @@ input[type=radio], input[type=checkbox] {
   position: relative;
   display: inline-block;
   padding: 12px 12px 12px 46px;
-  border-radius: 8px;
+  border-radius: 4px;
   vertical-align: middle;
   cursor: pointer;
   &:hover {
@@ -89,6 +89,15 @@ input[type=radio], input[type=checkbox] {
     border: 2px solid #bbb;
     border-radius: 4px;
     content: '';
+  }
+  &.is-small {
+    padding: 10px 10px 10px 36px;
+    &:after {
+      top: 25%;
+      left: 11px;
+      width: 15px;
+      height: 15px;
+    }
   }
 }
 .radio {
@@ -130,6 +139,14 @@ input[type=radio], input[type=checkbox] {
     transform: rotate(45deg);
     input[type=checkbox]:checked + & {
       opacity: 1;
+    }
+  }
+  &.is-small {
+    &:before {
+      top: 29%;
+      left: 17px;
+      width: 5px;
+      height: 9px;
     }
   }
 }

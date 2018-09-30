@@ -15,7 +15,7 @@
             p 天気
           li.order-item-cell.is-title
             p 注文状況
-          li.order-item-cell.is-title.is-user
+          li.order-item-cell.is-title.is-no-border
             p 注文者
       li.order-item(v-for="order in orders" :key=index)
         ul.order-item-cell-wapper
@@ -23,13 +23,38 @@
             p {{ `${order.date}(${order.day_of_week_ja})` }}
           li.order-item-cell
             p -
-          li.order-item-cell
-            p {{ `${order.order_users_relations.length}/10` }}
-          li.order-item-cell.is-user(
-            v-for="user in order.order_users_relations"
-            v-on:click="onClickUser(user, `${order.date}(${order.day_of_week_ja})`)"
-            :key=index)
-            p {{ user.user_name }}
+          li(v-if="order.status === 'acceptable'"
+            v-on:click="order.order_users_relations.length >= order.app_border && onClickStatus(order)"
+            :class="getOrderStatusClass(order)")
+            p {{ `${order.order_users_relations.length}/${order.app_border}` }}
+            img.order-item-cell-icon(
+              v-if="order.order_users_relations.length >= order.app_border"
+              src=".././assets/svg/phone.svg"
+              width="13"
+              height="13")
+          li.order-item-cell(v-else-if="order.status === 'ordered'")
+            p {{ `${order.order_users_relations.length}/${order.app_border}` }}
+            img.order-item-cell-icon(
+              src=".././assets/svg/check.svg"
+              width="13"
+              height="13")
+          li.order-item-cell.is-disabled(v-else-if="order.status === 'not_ordered'")
+            p {{ `${order.order_users_relations.length}/${order.app_border}` }}
+          li(v-for="user in order.order_users_relations" :key="user.id")
+            .order-item-cell.is-no-border.is-active(
+              v-if="order.status === 'acceptable'"
+              v-on:click="onClickUser(user, `${order.date}(${order.day_of_week_ja})`)")
+              p {{ user.user_name }}
+            .order-item-cell.is-no-border.is-no-padding.is-wide(
+              v-else-if="order.status === 'ordered'"
+              v-on:click="updateUser(user)")
+              input(type="checkbox" v-bind:id="user.id" v-model="user.status === 'received'")
+              label.checkbox.is-small(v-bind:for="user.id") {{ user.user_name }}
+            .order-item-cell.is-no-border.is-disabled(
+              v-else-if="order.status === 'not_ordered'")
+              p {{ user.user_name }}
+          li.order-item-cell.is-no-border.is-alert(v-if="order.status === 'ordered'")
+              p 支払ったら チェック！
     router-link.order-btn(to="/new")
       p.order-btn-text 注文する
     
@@ -45,7 +70,6 @@ import axios from 'axios';
 import Toast from './Toast.vue'
 
 const hostName = 'localhost:3000';
-const path = '/api/orders';
 
 export default {
   name: 'order-list',
@@ -62,9 +86,22 @@ export default {
   },
   methods: {
     getOrders: function() {
-      axios.get(`http://${hostName}${path}`)
+      axios.get(`http://${hostName}/api/orders`)
         .then((response) => {
           this.orders = response.data;
+        })
+        .catch(() => {
+        });
+    },
+    updateOrder: function(id, status) {
+      axios.put(`http://${hostName}/api/orders/${id}`, {
+          order: {
+            id,
+            status,
+          }
+        })
+        .then(() => {
+          this.getOrders();
         })
         .catch(() => {
         });
@@ -82,9 +119,26 @@ export default {
       this.toastText = `${user.user_name}さんの${date}の注文を取り消してもよろしいですか？`
       this.isToastShown = true
     },
+    updateUser: function(user) {
+      axios.put(`http://${hostName}/api/order_users_relations/${user.id}`, {
+          status: user.status === 'received' ? 'not_receive' : 'received',
+         }).then(() => {
+          this.getOrders();
+        })
+        .catch(() => {
+        });
+    },
+    onClickStatus: function(order) {
+      this.onConformHandler = () => this.updateOrder(order.id, 'ordered')
+      this.toastText = `${order.date}(${order.day_of_week_ja})を注文済みにしてもよろしいですか？(この操作は取り消せません)`
+      this.isToastShown = true
+    },
     toastClose: function() {
       this.isToastShown = false
     },
+    getOrderStatusClass: function(order) {
+      return `order-item-cell ${order.order_users_relations.length >= order.app_border && 'is-active'}`
+    }
   },
   mounted: function() {
     this.getOrders();
@@ -125,7 +179,8 @@ $list-item-height:   30px;
       height: 100%;
     }
     .order-item-cell{
-      width: 75px;
+      min-width: 65px;
+      max-width: 85px;
       padding: 10px;
       border-bottom: 1px solid gray;
       display: flex;
@@ -137,17 +192,35 @@ $list-item-height:   30px;
       }
       &.is-title{
         background-color: bisque;
-        &.is-user{
+        &.is-no-border{
           height: calc(100% - 126px); // FIXME: ハードコード
         }
       }
-      &.is-user{
-        border-bottom: 0;
+      &.is-no-border{
+        border: 0;
+      }
+      &.is-no-padding{
+        padding: 0;
+      }
+      &.is-wide{
+        min-width: 105px;
+        max-width: 105px;
+      }
+      &.is-active {
         cursor: pointer;
         &:hover {
           opacity: 0.7;
         }
       }
+      &.is-disabled {
+        background-color: lightgray;
+      }
+      &.is-alert {
+        color: red;
+      }
+    }
+    .order-item-cell-icon {
+      margin: 0 5px;
     }
   }
   .order-btn {

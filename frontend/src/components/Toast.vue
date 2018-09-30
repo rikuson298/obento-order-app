@@ -34,6 +34,9 @@ export default {
     background-color: rgba(0, 0, 0, .6);
     z-index: 1001;
     top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -52,6 +55,7 @@ export default {
     height: auto;
     z-index: 1002;
     transition: all .3s ease;
+    border-radius: 4px;
     &.is-hidden {
       width: 0;
       opacity: 0;
