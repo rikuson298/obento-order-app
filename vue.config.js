@@ -1,5 +1,5 @@
 module.exports = {
-  outputDir: 'public/dist',
+  outputDir: 'docs',
   devServer: {
     proxy: 'http://localhost:3000'
   },
