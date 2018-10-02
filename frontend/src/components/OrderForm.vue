@@ -9,6 +9,9 @@
     .form-label
       p 注文日
     ul.form-order-list
+      li.form-order-list-item
+        input(type="checkbox" v-on:change="onChageAllCheck" id="'allCkeck'" v-model="allChecked")
+        label.checkbox(for="'allCkeck'") 一括チェック
       li.form-order-list-item(v-for="(order, index) in orders" :key="index")
         input(type="checkbox" v-bind:id="order.id" v-model="order.checked")
         label.checkbox(v-bind:for="order.id") {{ `${order.date}(${order.day_of_week_ja})` }}
@@ -36,6 +39,7 @@ export default {
       orders: [{id: 0, checked: false}],
       errors: [],
       userName: '',
+      allChecked: false,
     }
   },
   methods: {
@@ -75,6 +79,14 @@ export default {
       }
       return true
     },
+    onChageAllCheck: function() {
+      this.orders = this.orders.map((order) => {
+        return {
+          ...order,
+          checked: this.allChecked
+        }
+      })
+    }
   },
   mounted: function() {
     this.getOrders();
