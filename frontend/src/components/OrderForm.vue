@@ -8,10 +8,14 @@
       input.form-input(id="order-user-name" type="text" v-model="userName" placeholder="入力してください")
     .form-label
       p 注文日
-    ul.form-order-list
-      li.form-order-list-item(v-for="(order, index) in orders" :key="index")
-        input(type="checkbox" v-bind:id="order.id" v-model="order.checked")
-        label.checkbox(v-bind:for="order.id") {{ `${order.date}(${order.day_of_week_ja})` }}
+    div(v-if="!!orders")
+      ul.form-order-list
+        li.form-order-list-item
+          input(type="checkbox" v-on:change="onChageAllCheck" id="'allCkeck'" v-model="allChecked")
+          label.checkbox(for="'allCkeck'") 一括チェック
+        li.form-order-list-item(v-for="(order, index) in orders" :key="index")
+          input(type="checkbox" v-bind:id="order.id" v-model="order.checked")
+          label.checkbox(v-bind:for="order.id") {{ `${order.date}(${order.day_of_week_ja})` }}
 
     .errors(v-if="errors.length > 0")
       .error-msg(v-for="error in errors")
@@ -26,20 +30,22 @@
 <script>
 import axios from 'axios';
 
-const hostName = 'localhost:3000';
+const hostName = 'https://test-obento-order-app.herokuapp.com/';
 
 export default {
   name: 'order-form',
+  title: '新規注文',
   data () {
     return {
-      orders: [{id: 0, checked: false}],
+      orders: [],
       errors: [],
       userName: '',
+      allChecked: false,
     }
   },
   methods: {
     getOrders: function() {
-      axios.get(`http://${hostName}/api/order_users_relations/new`)
+      axios.get(`${hostName}/api/order_users_relations/new`)
         .then((response) => {
           this.orders = response.data
         })
@@ -49,7 +55,7 @@ export default {
     craeatOrders: function() {
       const orderIds = this.orders.filter(o => o.checked).map(o => o.id)
       if (!this.validetionForm(orderIds)) return
-      axios.post(`http://${hostName}/api/order_users_relations/bulk_create`,{
+      axios.post(`${hostName}/api/order_users_relations/bulk_create`,{
         order_users_relation: {
           user_name: this.userName,
           order_ids: orderIds
@@ -74,6 +80,14 @@ export default {
       }
       return true
     },
+    onChageAllCheck: function() {
+      this.orders = this.orders.map((order) => {
+        return {
+          ...order,
+          checked: this.allChecked
+        }
+      })
+    }
   },
   mounted: function() {
     this.getOrders();
