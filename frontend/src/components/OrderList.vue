@@ -69,7 +69,7 @@
 import axios from 'axios';
 import Toast from './Toast.vue'
 
-const hostName = 'localhost:3000';
+const hostName = 'https://test-obento-order-app.herokuapp.com/';
 
 export default {
   name: 'order-list',
@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     getOrders: function() {
-      axios.get(`http://${hostName}/api/orders`)
+      axios.get(`${hostName}/api/orders`)
         .then((response) => {
           this.orders = response.data;
         })
@@ -95,7 +95,7 @@ export default {
         });
     },
     updateOrder: function(id, status) {
-      axios.put(`http://${hostName}/api/orders/${id}`, {
+      axios.put(`${hostName}/api/orders/${id}`, {
           order: {
             id,
             status,
@@ -108,7 +108,7 @@ export default {
         });
     },
     deleteUsersOrder: function(id) {
-      axios.delete(`http://${hostName}/api/order_users_relations/${id}`)
+      axios.delete(`${hostName}/api/order_users_relations/${id}`)
         .then(() => {
           this.getOrders();
         })
@@ -121,7 +121,7 @@ export default {
       this.isToastShown = true
     },
     updateUser: function(user) {
-      axios.put(`http://${hostName}/api/order_users_relations/${user.id}`, {
+      axios.put(`${hostName}/api/order_users_relations/${user.id}`, {
           status: user.status === 'received' ? 'not_receive' : 'received',
          }).then(() => {
           this.getOrders();
