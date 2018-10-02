@@ -73,6 +73,7 @@ const hostName = 'localhost:3000';
 
 export default {
   name: 'order-list',
+  title: '注文一覧',
   data () {
     return {
       orders: [],

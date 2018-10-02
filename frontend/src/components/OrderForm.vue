@@ -30,6 +30,7 @@ const hostName = 'localhost:3000';
 
 export default {
   name: 'order-form',
+  title: '新規注文',
   data () {
     return {
       orders: [{id: 0, checked: false}],
