@@ -49,6 +49,7 @@ test:
 #
 production:
   <<: *default
+  url: <%= ENV['DATABASE_URL'] %>
   database: obento-order-app_production
   username: obento-order-app
   password: <%= ENV['OBENTO-ORDER-APP_DATABASE_PASSWORD'] %>
