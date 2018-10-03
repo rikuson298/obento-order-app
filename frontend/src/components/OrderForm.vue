@@ -30,8 +30,6 @@
 <script>
 import axios from 'axios';
 
-const hostName = 'https://test-obento-order-app.herokuapp.com/';
-
 export default {
   name: 'order-form',
   title: '新規注文',
@@ -45,7 +43,7 @@ export default {
   },
   methods: {
     getOrders: function() {
-      axios.get(`${hostName}/api/order_users_relations/new`)
+      axios.get(`${process.env.VUE_APP_API_END_POINT}/api/order_users_relations/new`)
         .then((response) => {
           this.orders = response.data
         })
@@ -55,7 +53,7 @@ export default {
     craeatOrders: function() {
       const orderIds = this.orders.filter(o => o.checked).map(o => o.id)
       if (!this.validetionForm(orderIds)) return
-      axios.post(`${hostName}/api/order_users_relations/bulk_create`,{
+      axios.post(`${process.env.VUE_APP_API_END_POINT}/api/order_users_relations/bulk_create`,{
         order_users_relation: {
           user_name: this.userName,
           order_ids: orderIds
