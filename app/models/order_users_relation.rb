@@ -23,8 +23,11 @@ class OrderUsersRelation < ApplicationRecord
     def bulk_create(order_ids, user_name)
       created_ids = []
       order_ids.each do |id|
-        order_users_relation = new(order_id: id, user_name: user_name)
-        if order_users_relation.save!
+        order_users_relation = create(
+          order_id: id,
+          user_name: user_name
+        ) if !find_by(order_id: id, user_name: user_name).present?
+        if order_users_relation.present?
           created_ids << id
         end
       end
