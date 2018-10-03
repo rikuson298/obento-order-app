@@ -41,10 +41,10 @@ class Order < ApplicationRecord
     as_json({
       only: %i"id day_of_week status",
       methods: %i"day_of_week_ja",
-      include: :order_users_relations
     }).merge({
       date: date.strftime("%-m/%-d"),
       app_border: APP_BORDER,
+      order_users_relations: order_users_relations.order(:id)
     })
   end
 end
