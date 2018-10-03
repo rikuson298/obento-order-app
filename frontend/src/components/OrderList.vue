@@ -69,8 +69,6 @@
 import axios from 'axios';
 import Toast from './Toast.vue'
 
-const hostName = 'https://test-obento-order-app.herokuapp.com/';
-
 export default {
   name: 'order-list',
   title: '注文一覧',
@@ -87,7 +85,7 @@ export default {
   },
   methods: {
     getOrders: function() {
-      axios.get(`${hostName}/api/orders`)
+      axios.get(`${process.env.VUE_APP_API_END_POINT}/api/orders`)
         .then((response) => {
           this.orders = response.data;
         })
@@ -95,7 +93,7 @@ export default {
         });
     },
     updateOrder: function(id, status) {
-      axios.put(`${hostName}/api/orders/${id}`, {
+      axios.put(`${process.env.VUE_APP_API_END_POINT}/api/orders/${id}`, {
           order: {
             id,
             status,
@@ -108,7 +106,7 @@ export default {
         });
     },
     deleteUsersOrder: function(id) {
-      axios.delete(`${hostName}/api/order_users_relations/${id}`)
+      axios.delete(`${process.env.VUE_APP_API_END_POINT}/api/order_users_relations/${id}`)
         .then(() => {
           this.getOrders();
         })
@@ -121,7 +119,7 @@ export default {
       this.isToastShown = true
     },
     updateUser: function(user) {
-      axios.put(`${hostName}/api/order_users_relations/${user.id}`, {
+      axios.put(`${process.env.VUE_APP_API_END_POINT}/api/order_users_relations/${user.id}`, {
           status: user.status === 'received' ? 'not_receive' : 'received',
          }).then(() => {
           this.getOrders();
