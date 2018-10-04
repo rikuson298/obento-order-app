@@ -30,10 +30,6 @@ class Api::OrdersController < Api::ApplicationController
     end
   end
 
-  def destroy
-    @order.destroy
-  end
-
   private
     def set_order
       @order = Order.find(params[:id])
