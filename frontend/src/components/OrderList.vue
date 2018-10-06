@@ -22,7 +22,7 @@
           li.order-item-cell.is-title
             p {{ `${order.date}(${order.day_of_week_ja})` }}
           li.order-item-cell
-            p -
+            p {{ order.forecast ? order.forecast.telop : '-' }}
           li(v-if="order.status === 'acceptable'"
             v-on:click="order.order_users_relations.length >= order.app_border && onClickStatus(order)"
             :class="getOrderStatusClass(order)")

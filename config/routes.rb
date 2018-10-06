@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   root 'top#index'
 
   namespace :api do
-    resources :orders, only: %i"index create update destroy"
+    resources :orders, only: %i"index create update"
     resources :order_users_relations, only: %i"index new create update destroy" do
       collection do
         post :bulk_create

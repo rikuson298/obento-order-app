@@ -16,15 +16,26 @@ class OrderUsersRelation < ApplicationRecord
 
   validates :order_id, :user_name, :status, presence: true
   validates :order_id, uniqueness: {scope: %i"user_name"}
+  validates :user_name, length: { in: 1..10 }
+  validate :order_acceptable?, on: %i"create destroy"
 
   enum status: { not_receive: 0, received: 1 }
+
+  def order_acceptable?
+    if order_id.blank? || !order.acceptable?
+      errors.add(:order_id, "この日付には注文の追加・削除はできません")
+    end
+  end
 
   class << self
     def bulk_create(order_ids, user_name)
       created_ids = []
       order_ids.each do |id|
-        order_users_relation = new(order_id: id, user_name: user_name)
-        if order_users_relation.save!
+        order_users_relation = create(
+          order_id: id,
+          user_name: user_name
+        ) if !find_by(order_id: id, user_name: user_name).present?
+        if order_users_relation.present?
           created_ids << id
         end
       end

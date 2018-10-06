@@ -3,7 +3,7 @@
     .page-title
       p 注文する
     .form-label
-      p お名前(絵文字は使えません)
+      p お名前
     .form-control
       input.form-input(id="order-user-name" type="text" v-model="userName" placeholder="入力してください")
     .form-label
@@ -68,6 +68,9 @@ export default {
       let errors = []
       if (!this.userName) {
         errors.push('お名前を入力してください')
+      }
+      if (this.userName && this.userName.length > 10) {
+        errors.push('お名前は10文字以内を入力してください')
       }
       if (orderIds && orderIds.length < 1) {
         errors.push('注文日を1つ以上選択してください')
