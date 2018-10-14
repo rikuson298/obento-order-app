@@ -33,6 +33,14 @@ class Order < ApplicationRecord
     %w(日 月 火 水 木 金 土)[day_of_week_before_type_cast]
   end
 
+  def min_user_count
+    if order_users_relations.size >= 10
+      return 0
+    else
+      return 10 - order_users_relations.size
+    end
+  end
+
   def cant_ordered!
     update(status: :not_ordered)
   end
@@ -40,7 +48,7 @@ class Order < ApplicationRecord
   def to_json
     as_json({
       only: %i"id day_of_week status",
-      methods: %i"day_of_week_ja",
+      methods: %i"day_of_week_ja min_user_count",
     }).merge({
       date: date.strftime("%-m/%-d"),
       app_border: APP_BORDER,

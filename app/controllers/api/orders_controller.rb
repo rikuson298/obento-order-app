@@ -18,6 +18,21 @@ class Api::OrdersController < Api::ApplicationController
     render json: @orders.compact, status: :ok
   end
 
+  def show_by_date
+    forecasts = WeatherService.call["forecasts"]
+    target_day = params[:date]
+    order = Order.find_by(date: target_day)
+    if order.present?
+      forecast = forecasts.select { |f| f["date"] == order.date.to_s }.first
+      order_json = order.to_json.merge(
+        forecast: forecast&.slice("telop")
+      )
+      render json: order_json, status: :ok
+    else
+      render json: {}, status: :not_found
+    end
+  end
+
   def create
     @order = Order.new(order_params)
     if @order.save

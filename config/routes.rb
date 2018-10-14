@@ -3,7 +3,11 @@ Rails.application.routes.draw do
   root 'top#index'
 
   namespace :api do
-    resources :orders, only: %i"index create update"
+    resources :orders, only: %i"index create update" do
+      collection do
+        get :show_by_date
+      end
+    end
     resources :order_users_relations, only: %i"index new create update destroy" do
       collection do
         post :bulk_create
